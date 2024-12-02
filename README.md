@@ -1,2 +1,2 @@
-# advent-24
-solutions for advent of code 2024
+# Advent of Code 2024 🎄
+Repo for my solutions to Advent of Code 2024 problems 🎅
