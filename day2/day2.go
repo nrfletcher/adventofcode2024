@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func isReportSafe(s string) bool {
+func stringToIntSlice(s string) []int {
 	numbersAsStrings := strings.Fields(s)
 	var numbers []int
 	for i := 0; i < len(numbersAsStrings); i++ {
@@ -21,6 +21,10 @@ func isReportSafe(s string) bool {
 		numbers = append(numbers, val)
 	}
 
+	return numbers
+}
+
+func isReportSafe(numbers []int) bool {
 	isIncreasing := false
 	if numbers[0] < numbers[1] {
 		isIncreasing = true
@@ -38,7 +42,6 @@ func isReportSafe(s string) bool {
 		}
 	}
 
-	fmt.Printf("Valid %s \n", s)
 	return true
 }
 
@@ -46,15 +49,40 @@ func partOneSolution(file *os.File) int {
 	scanner := bufio.NewScanner(file)
 	sum := 0
 	for scanner.Scan() {
-		if isReportSafe(scanner.Text()) == true {
+		if isReportSafe(stringToIntSlice(scanner.Text())) == true {
 			sum += 1
 		}
 	}
 	return sum
 }
 
+// https://stackoverflow.com/questions/37334119/how-to-delete-an-element-from-a-slice-in-golang
+func removeIndex(s []int, index int) []int {
+	ret := make([]int, 0)
+	ret = append(ret, s[:index]...)
+	return append(ret, s[index+1:]...)
+}
+
+func removeOneMakesSafe(numbers []int) bool {
+	for i := 0; i < len(numbers); i++ {
+		if isReportSafe(removeIndex(numbers, i)) {
+			return true
+		}
+	}
+	return false
+}
+
+// This is disgustingly inefficient but oh well
 func partTwoSolution(file *os.File) int {
-	return 1
+	scanner := bufio.NewScanner(file)
+	sum := 0
+
+	for scanner.Scan() {
+		if isReportSafe(stringToIntSlice(scanner.Text())) == true || removeOneMakesSafe(stringToIntSlice(scanner.Text())) == true {
+			sum += 1
+		}
+	}
+	return sum
 }
 
 func main() {
